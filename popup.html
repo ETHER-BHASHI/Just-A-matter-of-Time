@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { width: 260px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 14px; margin: 0; background: #fff; color: #1e293b; }
+    h3 { margin: 0 0 10px 0; font-size: 15px; color: #0f172a; }
+    label { font-size: 11px; font-weight: 600; color: #475569; display: block; margin-top: 8px; }
+    input { width: 100%; box-sizing: border-box; padding: 8px; margin-top: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; }
+    button { width: 100%; margin-top: 14px; padding: 9px; background: #008069; color: #fff; font-weight: 600; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #006a57; }
+    .status { font-size: 11px; color: #16a34a; margin-top: 8px; text-align: center; display: none; font-weight: bold; }
+    .info { font-size: 11px; color: #64748b; margin-top: 8px; line-height: 1.4; }
+  </style>
+</head>
+<body>
+  <h3>🎯 Filter Roles</h3>
+  
+  <label>Target Keywords (comma-separated):</label>
+  <input type="text" id="roles" placeholder="analyst, bi, data, sde, intern" />
+
+  <button id="saveBtn">Save Preferences</button>
+  <div id="statusMsg" class="status">✅ Saved!</div>
+
+  <p class="info">No API keys required. Runs entirely on-device.</p>
+
+  <script src="popup.js"></script>
+</body>
+</html>

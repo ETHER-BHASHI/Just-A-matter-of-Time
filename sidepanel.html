@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Placement Tracker</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { 
+      padding: 14px; 
+      background: #f8fafc; 
+      color: #0f172a; 
+      display: flex; 
+      flex-direction: column; 
+      height: 100vh; 
+      overflow-x: hidden;
+    }
+
+    header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 12px; 
+    }
+    h2 { font-size: 15px; font-weight: 700; color: #0f172a; letter-spacing: -0.2px; }
+    .badge { 
+      background: #008069; 
+      color: white; 
+      font-size: 11px; 
+      padding: 2px 8px; 
+      border-radius: 12px; 
+      font-weight: 600; 
+    }
+
+    .settings-box { 
+      background: #ffffff; 
+      border: 1px solid #e2e8f0; 
+      border-radius: 8px; 
+      padding: 10px 12px; 
+      margin-bottom: 12px; 
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+    .settings-box label { 
+      font-size: 11px; 
+      font-weight: 600; 
+      color: #475569; 
+      display: block; 
+      margin-bottom: 6px; 
+    }
+    .settings-row { display: flex; gap: 6px; }
+    .settings-row input { 
+      flex: 1; 
+      padding: 6px 10px; 
+      border: 1px solid #cbd5e1; 
+      border-radius: 6px; 
+      font-size: 12px; 
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .settings-row input:focus { border-color: #008069; }
+    .btn-save { 
+      background: #008069; 
+      color: white; 
+      border: none; 
+      padding: 6px 12px; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-size: 11px; 
+      font-weight: 600; 
+      transition: background 0.15s ease;
+    }
+    .btn-save:hover { background: #006a57; }
+    .save-confirm { font-size: 10px; color: #16a34a; font-weight: bold; margin-top: 5px; display: none; }
+
+    #jobList { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+      flex: 1; 
+      overflow-y: auto; 
+      padding-right: 2px;
+    }
+    
+    .card { 
+      background: #ffffff; 
+      border: 1px solid #e2e8f0; 
+      border-radius: 8px; 
+      padding: 12px; 
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); 
+      cursor: pointer; 
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease; 
+    }
+    .card:hover { 
+      transform: translateY(-1px); 
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07); 
+      border-color: #cbd5e1;
+    }
+    .card:active { transform: scale(0.99); }
+    .card.urgent { border-left: 4px solid #ef4444; }
+    .card.warning { border-left: 4px solid #f59e0b; }
+    .card.normal { border-left: 4px solid #10b981; }
+
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .company { font-size: 13px; font-weight: 700; color: #0f172a; }
+    .badge-ctc { 
+      background: #ecfdf5; 
+      color: #047857; 
+      border: 1px solid #a7f3d0; 
+      font-size: 10px; 
+      font-weight: 700; 
+      padding: 2px 6px; 
+      border-radius: 4px; 
+      white-space: nowrap;
+    }
+
+    .role { font-size: 12px; color: #64748b; margin-top: 2px; font-weight: 500; }
+    .eligibility { font-size: 11px; color: #475569; margin-top: 5px; line-height: 1.3; }
+    
+    /* Highlighted Application Channel / Portal Instruction */
+    .portal-instruction-banner {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 8px;
+      border-radius: 6px;
+      margin-top: 7px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .timer-box { 
+      margin-top: 9px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      background: #f1f5f9; 
+      padding: 6px 10px; 
+      border-radius: 6px; 
+    }
+    .timer-label { font-size: 10px; color: #64748b; font-weight: 500; }
+    .timer-val { font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    .card-actions { display: flex; gap: 6px; margin-top: 10px; }
+    .btn-apply { 
+      flex: 1; 
+      text-align: center; 
+      text-decoration: none; 
+      background: #008069; 
+      color: white; 
+      padding: 6px 0; 
+      font-size: 11px; 
+      font-weight: 600; 
+      border-radius: 6px; 
+      transition: background 0.15s ease;
+    }
+    .btn-apply:hover { background: #006a57; }
+    .btn-group {
+      text-align: center;
+      text-decoration: none;
+      background: #2563eb;
+      color: white;
+      padding: 6px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 6px;
+      white-space: nowrap;
+      transition: background 0.15s ease;
+    }
+    .btn-group:hover { background: #1d4ed8; }
+
+    .btn-dismiss { 
+      background: #f1f5f9; 
+      border: 1px solid #e2e8f0; 
+      padding: 6px 10px; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-size: 11px; 
+      color: #64748b; 
+      font-weight: 500;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .btn-dismiss:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+
+    .log-title { font-size: 10px; font-weight: 700; color: #64748b; margin-top: 10px; letter-spacing: 0.3px; }
+    .log-box { 
+      height: 75px; 
+      background: #0f172a; 
+      border-radius: 6px; 
+      padding: 8px; 
+      margin-top: 4px; 
+      overflow-y: auto; 
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; 
+      font-size: 10px; 
+      line-height: 1.4;
+    }
+    .log-entry.info { color: #94a3b8; }
+    .log-entry.success { color: #4ade80; }
+    .log-entry.warn { color: #facc15; }
+    .log-entry.error { color: #f87171; }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Placement Tracker</h2>
+    <span id="activeCount" class="badge">0</span>
+  </header>
+
+  <div class="settings-box">
+    <label>🎯 Target Role Keywords:</label>
+    <div class="settings-row">
+      <input type="text" id="roleInput" placeholder="analyst, bi, data, sde" />
+      <button id="btnSaveRoles" class="btn-save">Save</button>
+    </div>
+    <div id="saveConfirm" class="save-confirm">✅ Preferences Saved!</div>
+  </div>
+
+  <div id="jobList"></div>
+  <div id="emptyMsg" style="text-align: center; color: #94a3b8; font-size: 12px; padding: 28px 10px;">
+    No active deadlines tracked yet.
+  </div>
+
+  <div class="log-title">SCANNER ACTIVITY:</div>
+  <div class="log-box" id="logContainer"></div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>
